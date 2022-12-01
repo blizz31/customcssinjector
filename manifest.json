@@ -1,0 +1,40 @@
+{
+
+	"manifest_version": 2,
+	"name": "CustomCSS",
+	"version": "1.3.2",
+
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "{b2c51689-0095-472b-b900-2b3911fd5089}"
+		}
+	},
+
+	"description": "Write any CSS rules for any websites",
+
+	"icons": {
+		"48": "icons/CCSSI_icon_v2_48.png"
+	},
+	
+	"permissions": ["storage", "<all_urls>", "contextMenus", "notifications"],
+	
+	"browser_action": {
+		"browser_style": true,
+		"default_popup": "popup/popup.html",
+		"default_icon": {
+			"48": "icons/CCSSI_icon_v2_48.png",
+			"96": "icons/CCSSI_icon_v2_96.png"
+		}
+	},	
+	
+	"content_scripts": [
+	{
+		"matches": ["<all_urls>"],
+		"js": ["customcss.js"],
+		"run_at": "document_start",
+		"all_frames": true,
+		"match_about_blank": true
+	}
+	]
+
+}
