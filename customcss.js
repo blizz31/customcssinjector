@@ -5,8 +5,11 @@ customCSSObj.then(onGot, onError);
 
 // Get CSS and whitelist/blacklist from storage object and call apply()
 function onGot(items) {
-	apply(items.customCSSObj, items.whitelist, items.blacklist);
+	if (items.customCSSObj !== null) {
+		apply(items.customCSSObj, items.whitelist, items.blacklist);
+	}
 }
+
 
 // Error checking when obtaining CSS from storage
 function onError(error) {
@@ -53,6 +56,9 @@ function apply(customCSSObj, whitelist, blacklist) {
 
 // Checks for site-specific or domain-specific applied CSS and returns it to apply()
 function filterCustomCSSObj(customCSSObj) {
+	if (customCSSObj == null) {
+		return "";
+	}
 	var url = window.location.href;
 	var domain = window.location.hostname;
 	for (var key in customCSSObj) {
