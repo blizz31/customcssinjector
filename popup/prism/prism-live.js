@@ -6,17 +6,6 @@
 (async function() {
 "use strict";
 
-if (!window.Bliss) {
-	// Load Bliss if not loaded
-	//console.log("Bliss not loaded. Loading remotely from blissfuljs.com");
-
-	const bliss = document.createElement("script");
-	bliss.src = "https://blissfuljs.com/bliss.shy.min.js";
-	document.head.appendChild(bliss);
-
-	await new Promise(resolve => bliss.onload = resolve);
-}
-
 const $ = Bliss, $$ = Bliss.$;
 let ready = Promise.resolve();
 
