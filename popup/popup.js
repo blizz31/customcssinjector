@@ -101,10 +101,14 @@ function obtainActiveTabData() {
 
 // Checks for and removes empty string values in customCSSObj
 function cleanup(customCSSObj) {
-	for (const key in customCSSObj) {
-		if (customCSSObj[key] == "") {
-			delete customCSSObj[key];
-		}
+	if (!customCSSObj.css) {
+		delete customCSSObj.css;
+	}
+	if (!customCSSObj[activeTabDomain]) {
+		delete customCSSObj[activeTabDomain];
+	}
+	if (!customCSSObj[activeTabUrl]) {
+		delete customCSSObj[activeTabUrl];
 	}
 	return customCSSObj;
 }
