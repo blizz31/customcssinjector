@@ -9,6 +9,9 @@ header {
 h1 {
 	display: inline;
 }
+h2 {
+	margin-top: 0;
+}
 header img {
 	vertical-align: bottom;
 }

@@ -1,13 +1,13 @@
 {
 
 	"manifest_version": 2,
-	"name": "Custom CSS injector",
+	"name": "Crayon: custom CSS injector",
 	"version": "2.0",
 
 	"browser_specific_settings": {
 		"gecko": {
 			"data_collection_permissions": { "required": ["none"] },
-			"id": "@brylan-css-injector",
+			"id": "@crayon-css-injector",
 			"strict_min_version": "74.0"
 		}
 	},
@@ -15,8 +15,8 @@
 	"description": "Write CSS rules for any website",
 
 	"icons": {
-		"48": "icons/CCSSI_icon_v2_48.png",
-		"96": "icons/CCSSI_icon_v2_96.png"
+		"48": "icons/crayon_48.png",
+		"96": "icons/crayon_96.png"
 	},
 	
 	"permissions": ["storage", "<all_urls>", "contextMenus", "notifications"],
@@ -25,8 +25,8 @@
 		"browser_style": true,
 		"default_popup": "popup/popup.html",
 		"default_icon": {
-			"48": "icons/CCSSI_icon_v2_48.png",
-			"96": "icons/CCSSI_icon_v2_96.png"
+			"48": "icons/crayon_48.png",
+			"96": "icons/crayon_96.png"
 		}
 	},	
 	

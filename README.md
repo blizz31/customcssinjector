@@ -1,16 +1,18 @@
-# customcssinjector
+# Crayon: custom CSS injector
 
-Hi Everybody.
+Heya! This is a fork of [CustomCSS Injector](https://github.com/blizz31/customcssinjector/)
 
-Thanks for checking out Custom CSS Injector, a Firefox extension which enables users to add CSS content to a webpage on-the-fly!
+Why did I fork it? Here is what I did:
 
-If you have any features you're dying to add, feel free to branch out and do as you like!
+- Updated 3rd-party libraries (Prism and Bliss)
+- Improved the pop-up UX (you no longer have to click just on the little dot)
+- Improved granularity: you can now use global, domain and URL rules in tandem instead of them being mutually exclusive for some reason.
+- Most importantly: **an overview page**, accessible via the "see all your rules" button in the pop-up
+	- See all the rules you have saved
+	- Export/import
 
-Regards,
+![Crayon logo](icons/crayon_highres.png)
 
-Bryce
+### Licence
 
-
-### hi it's Morgân
-
-I forked this project and made some updates, love you bye
+Like the original, this project is under the [GNU GPL v3](LICENCE).
