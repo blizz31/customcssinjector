@@ -25,19 +25,13 @@ function onGot(items) {
 function filterCustomCSSObj(customCSSObj) {
 	if (!customCSSObj) {customCSSObj = {};}
 	tempCSSObj = customCSSObj; // Set global css in temp object to retain global style-sheet.
-	for (const key in customCSSObj) {
-		if (key == activeTabDomain) {
-			document.getElementById("rdomain").checked = true;
-			document.getElementById("rglobal").checked = false;
-			document.getElementById("rurl").checked = false;
-			return customCSSObj[key];
-		}
-		else if (key == activeTabUrl) {
-			document.getElementById("rurl").checked = true;
-			document.getElementById("rglobal").checked = false;
-			document.getElementById("rdomain").checked = false;
-			return customCSSObj[key];
-		}
+	if (activeTabUrl in customCSSObj) {
+		document.getElementById("rurl").checked = true;
+		return customCSSObj[activeTabUrl];
+	}
+	if (activeTabDomain in customCSSObj) {
+		document.getElementById("rdomain").checked = true;
+		return customCSSObj[activeTabDomain];
 	}
 	if (customCSSObj.css == null) {
 		return "";
