@@ -53,7 +53,7 @@ function apply(customCSSObj, whitelist, blacklist) {
 	}
 }
 
-function url() {
+function getUrl() {
 	return window.location.hostname + window.location.pathname;
 }
 
@@ -62,7 +62,7 @@ function filterCustomCSSObj(customCSSObj) {
 	if (customCSSObj == null) {
 		return "";
 	}
-	const url = url();
+	const url = getUrl();
 	const domain = window.location.hostname;
 	const css = [
 		customCSSObj.css, // global rules
@@ -74,5 +74,5 @@ function filterCustomCSSObj(customCSSObj) {
 
 // Handles message from Popup script and returns the URL and DOMAIN name of the active tab.
 browser.runtime.onMessage.addListener(request => {
-  return Promise.resolve({domain: window.location.hostname, url: url()});
+  return Promise.resolve({domain: window.location.hostname, url: getUrl()});
 });
