@@ -9,3 +9,8 @@ If you have any features you're dying to add, feel free to branch out and do as 
 Regards,
 
 Bryce
+
+
+### hi it's Morgân
+
+I forked this project and made some updates, love you bye
