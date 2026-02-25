@@ -1,7 +1,6 @@
-
+"use strict";
 // When page loads, call function to get CSS from storage
-const customCSSObj = browser.storage.local.get();
-customCSSObj.then(onGot, onError);
+browser.storage.local.get().then(onGot, onError);
 
 // Get CSS and whitelist/blacklist from storage object and call apply()
 function onGot(items) {
@@ -30,13 +29,13 @@ function update(changes, area) {
 // Conditional statements for whitelist and blacklists if user applied.
 function apply(customCSSObj, whitelist, blacklist) {
 	console.log("[CustomCSS Injector] Applied custom CSS.");
-	var css = filterCustomCSSObj(customCSSObj);
-	var hostname = window.location.hostname;
-	var cssLink = document.getElementById("custom-css-injector");
-	if (whitelist.hostnames == "" || whitelist.hostnames == null || whitelist.hostnames.includes(hostname)) {
+	const css = filterCustomCSSObj(customCSSObj);
+	const hostname = window.location.hostname;
+	const cssLink = document.getElementById("custom-css-injector");
+	if (!whitelist.hostnames || whitelist.hostnames.includes(hostname)) {
 		if (!blacklist.hostnames.includes(hostname)) {
-			if (cssLink == null) {
-				var cssLink = document.createElement("style");
+			if (cssLink === null) {
+				const cssLink = document.createElement("style");
 				cssLink.setAttribute("type", "text/css");
 				cssLink.setAttribute("id", "custom-css-injector");
 				cssLink.textContent = css;
@@ -46,7 +45,7 @@ function apply(customCSSObj, whitelist, blacklist) {
 			else {
 				cssLink.textContent = css;
 				return;
-			}		
+			}
 		}
 	}
 	if (cssLink != null) {
@@ -59,8 +58,8 @@ function filterCustomCSSObj(customCSSObj) {
 	if (customCSSObj == null) {
 		return "";
 	}
-	var url = window.location.href;
-	var domain = window.location.hostname;
+	const url = window.location.href;
+	const domain = window.location.hostname;
 	for (var key in customCSSObj) {
 		if (key == url) {
 			return customCSSObj[key];
