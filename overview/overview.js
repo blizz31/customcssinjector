@@ -1,4 +1,6 @@
 
+browser.storage.local.onChanged.addListener(location.reload.bind(location));
+
 const $ = Bliss, $$ = Bliss.$;
 const {
 	whitelist = "",
