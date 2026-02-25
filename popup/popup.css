@@ -28,3 +28,13 @@ input {
 	font-family: 'courier new';
 	font-size: 16px;
 }
+
+label + label {
+	margin-left: 1ch;
+}
+
+#whitelistText,
+#blacklistText,
+small {
+	display: block;
+}
