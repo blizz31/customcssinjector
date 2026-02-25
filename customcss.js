@@ -1,6 +1,20 @@
 "use strict";
 // When page loads, call function to get CSS from storage
-browser.storage.local.get().then(onGot, onError);
+update();
+
+// When custom CSS is changed this function is called.
+// Extracts the CSS as a string and calls apply()
+function update(changes) {
+	browser.storage.local.get().then(onGot, onError);
+}
+
+// Error checking when obtaining CSS from storage
+function onError(error) {
+	console.info("An error occurred: ", error);
+}
+
+// Defines a listener for the storage for when custom CSS changes in Options
+browser.storage.local.onChanged.addListener(update);
 
 // Get CSS and whitelist/blacklist from storage object and call apply()
 function onGot(items) {
@@ -10,19 +24,6 @@ function onGot(items) {
 }
 
 
-// Error checking when obtaining CSS from storage
-function onError(error) {
-	console.info("An error occurred: " + error);
-}
-
-// Defines a listener for the storage for when custom CSS changes in Options
-browser.storage.onChanged.addListener(update);
-
-// When custom CSS is changed this function is called.
-// Extracts the CSS as a string and calls apply()
-function update(changes, area) {
-	browser.storage.local.get().then(onGot, onError);
-}
 
 // Takes in a String parameter of the CSS code and applies it to the DOM
 // or updates the DOM if the style element already exists.

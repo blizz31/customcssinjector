@@ -1,13 +1,14 @@
 "use strict";
 document.getElementById("txtAreaCSS").value = "";
 
-// Starting point at which we get the URL and DOMAIN of the active tab.
-obtainActiveTabData();
 // Active tab variables
 let activeTabDomain;
 let activeTabUrl;
 // JSON Object that contains all CSS
 let tempCSSObj;
+
+// Starting point at which we get the URL and DOMAIN of the active tab.
+obtainActiveTabData();
 
 // Get stored CSS object from local storage.
 function getCSSObject() {
@@ -23,27 +24,17 @@ function onGot(items) {
 
 // Checks the current active tab domain/url against the CSS object and applies appropriate radio button
 function filterCustomCSSObj(customCSSObj) {
-	if (!customCSSObj) {customCSSObj = {};}
-	tempCSSObj = customCSSObj; // Set global css in temp object to retain global style-sheet.
-	if (activeTabUrl in customCSSObj) {
+	tempCSSObj = customCSSObj || {}; // Set global css in temp object to retain global style-sheet.
+	if (activeTabUrl in tempCSSObj) {
 		document.getElementById("rurl").checked = true;
-		return customCSSObj[activeTabUrl];
+		return tempCSSObj[activeTabUrl];
 	}
-	if (activeTabDomain in customCSSObj) {
+	if (activeTabDomain in tempCSSObj) {
 		document.getElementById("rdomain").checked = true;
-		return customCSSObj[activeTabDomain];
+		return tempCSSObj[activeTabDomain];
 	}
-	if (customCSSObj.css == null) {
-		return "";
-	}
-	else {
-		return customCSSObj.css;	
-	}
-}
 
-// Error handling
-function onError(error) {
-	console.info("An error occurred: " + error);
+	return tempCSSObj.css || "";
 }
 
 // Upon clicking 'Save', save the custom CSS to browser storage
@@ -73,10 +64,6 @@ document.getElementById("btnSubmit").addEventListener("click", function() {
 		blacklist: { hostnames: blacklistHostnames },
 	});
 });
-
-function onError(error) {
-  console.error(error);
-}
 
 // Send the message to the content_script and wait for response which will contain the URL and DOMAIN. 
 // Once URL/DOMAIN variables are set, then get the stored CSS and apply it to the textbox.
@@ -114,3 +101,7 @@ function cleanup(customCSSObj) {
 }
 
 
+// Error handling
+function onError(error) {
+	console.info("An error occurred: ", error);
+}
