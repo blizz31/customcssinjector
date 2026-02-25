@@ -53,12 +53,16 @@ function apply(customCSSObj, whitelist, blacklist) {
 	}
 }
 
+function url() {
+	return window.location.hostname + window.location.pathname;
+}
+
 // Checks for site-specific or domain-specific applied CSS and returns it to apply()
 function filterCustomCSSObj(customCSSObj) {
 	if (customCSSObj == null) {
 		return "";
 	}
-	const url = window.location.href;
+	const url = url();
 	const domain = window.location.hostname;
 	const css = [
 		customCSSObj.css, // global rules
@@ -70,5 +74,5 @@ function filterCustomCSSObj(customCSSObj) {
 
 // Handles message from Popup script and returns the URL and DOMAIN name of the active tab.
 browser.runtime.onMessage.addListener(request => {
-  return Promise.resolve({domain: window.location.hostname, url: window.location.href});
+  return Promise.resolve({domain: window.location.hostname, url: url()});
 });
