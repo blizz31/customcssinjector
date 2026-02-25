@@ -54,11 +54,15 @@ for(const key in customCSSObj)
 	}
 }
 
-for(const [domainName, domain] of Object.entries(domains))
+for(const [domainName, domain] of Object.entries(domains).sort(sortByLocation))
 {
 	const domainElement = createSection(domainName, domain[css] || "");
-	for(const path in domain)
-		createSection(path, domain[path], $(".codeContainer", domainElement));
+	for(const [path, pathCSS] of Object.entries(domain).sort(sortByLocation))
+		createSection(path, pathCSS, $(".codeContainer", domainElement));
+}
+
+function sortByLocation([la], [lb]) {
+	return la > lb ? 1 : -1;
 }
 
 Prism.highlightAllUnder(main);
