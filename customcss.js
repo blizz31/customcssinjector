@@ -60,9 +60,12 @@ function filterCustomCSSObj(customCSSObj) {
 	}
 	const url = window.location.href;
 	const domain = window.location.hostname;
-	return customCSSObj[url]
-		|| customCSSObj[domain]
-		|| customCSSObj.css;
+	const css = [
+		customCSSObj.css, // global rules
+		customCSSObj[domain],
+		customCSSObj[url],
+	];
+	return css.filter(Boolean).join("\n");
 }
 
 // Handles message from Popup script and returns the URL and DOMAIN name of the active tab.

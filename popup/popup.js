@@ -21,16 +21,33 @@ function onGot(items) {
 	document.getElementById("blacklistText").value = items.blacklist?.hostnames || "";
 }
 
+const rglobal = document.getElementById("rglobal");
+const rurl = document.getElementById("rurl");
+const rdomain = document.getElementById("rdomain");
+
+rglobal.addEventListener("change", function(event) {
+	if(this.checked)
+		document.getElementById("txtAreaCSS").value = tempCSSObj.css || "";
+});
+rurl.addEventListener("change", function(event) {
+	if(this.checked)
+		document.getElementById("txtAreaCSS").value = tempCSSObj[activeTabUrl] || "";
+});
+rdomain.addEventListener("change", function(event) {
+	if(this.checked)
+		document.getElementById("txtAreaCSS").value = tempCSSObj[activeTabDomain] || "";
+});
+
 // Checks the current active tab domain/url against the CSS object and applies appropriate radio button
 function filterCustomCSSObj(customCSSObj) {
 	if (!customCSSObj) {customCSSObj = {};}
 	tempCSSObj = customCSSObj; // Set global css in temp object to retain global style-sheet.
 	if (activeTabUrl in customCSSObj) {
-		document.getElementById("rurl").checked = true;
+		rurl.checked = true;
 		return customCSSObj[activeTabUrl];
 	}
 	if (activeTabDomain in customCSSObj) {
-		document.getElementById("rdomain").checked = true;
+		rdomain.checked = true;
 		return customCSSObj[activeTabDomain];
 	}
 	if (customCSSObj.css == null) {
@@ -53,18 +70,14 @@ document.getElementById("btnSubmit").addEventListener("click", function() {
 	const whitelistHostnames = document.getElementById("whitelistText").value;
 	const blacklistHostnames = document.getElementById("blacklistText").value;
 	// Check radio buttons and apply appropriate LocalStorage configuration
-	if (document.getElementById("rglobal").checked) {
+	if (rglobal.checked) {
 		tempCSSObj.css = customCSS;
-		delete tempCSSObj[activeTabDomain];
-		delete tempCSSObj[activeTabUrl];
 	}
-	else if (document.getElementById("rurl").checked) {
+	else if (rurl.checked) {
 		tempCSSObj[activeTabUrl] = customCSS;
-		delete tempCSSObj[activeTabDomain];
 	}
 	else {
-		tempCSSObj[activeTabDomain] = customCSS;		
-		delete tempCSSObj[activeTabUrl];
+		tempCSSObj[activeTabDomain] = customCSS;
 	}
 	
 	browser.storage.local.set({
