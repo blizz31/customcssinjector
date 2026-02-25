@@ -21,6 +21,10 @@ label + label {
 	margin-left: 1ch;
 }
 
+textarea::placeholder {
+	color: rgba(0,0,0, 0.5);
+}
+
 input {
 	margin: 2px;
 }
