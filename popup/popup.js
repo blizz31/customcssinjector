@@ -123,3 +123,6 @@ function cleanup(customCSSObj) {
 }
 
 
+document.getElementById("btnOverview").addEventListener("click", () => {
+	window.open("/overview/index.html");
+})

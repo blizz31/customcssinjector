@@ -1,0 +1,36 @@
+:root {
+	background-color: cornsilk;
+	padding-left: 20%;
+	padding-right: 20%;
+}
+header {
+	text-align: center;
+}
+h1 {
+	display: inline;
+}
+header img {
+	vertical-align: bottom;
+}
+
+#sowwyImLazy {
+	font-style: italic;
+	margin: 1em;
+}
+
+
+summary {
+	font-weight: bold;
+	font-size: 1.5rem;
+	cursor: pointer;
+}
+
+details details summary {
+	font-size: 1.3rem;;
+}
+
+.codeContainer {
+	margin-left: 0.8ch;
+	padding-left: 0.5ch;
+	border-left: 2px solid black;
+}
