@@ -11,10 +11,11 @@ const {
 $("#whitelist").innerText = whitelist?.hostnames || "none";
 $("#blacklist").innerText = blacklist?.hostnames || "none";
 
-function createSection(title, contents, parent = main) {
+function createSection(title, url, contents, parent = main) {
 	return $.create("details", {
 		contents: [
 			{ tag: "summary", contents: [title] },
+			url ? { tag: "a", href: `https://${url}`, target: "_blank", contents: ["Open in a new tab"] } : "",
 			{ tag: "div", className: "codeContainer", contents: [
 				{ tag: "pre", contents: [
 					{ tag: "code", className: "language-css", contents },
@@ -27,7 +28,7 @@ function createSection(title, contents, parent = main) {
 
 const main = $("main");
 if(customCSSObj.css)
-	createSection("Global rules", customCSSObj.css);
+	createSection("Global rules", null, customCSSObj.css);
 delete customCSSObj.css;
 
 const domains = {};
@@ -56,9 +57,9 @@ for(const key in customCSSObj)
 
 for(const [domainName, domain] of Object.entries(domains).sort(sortByLocation))
 {
-	const domainElement = createSection(domainName, domain[css] || "");
+	const domainElement = createSection(domainName, domainName, domain[css] || "");
 	for(const [path, pathCSS] of Object.entries(domain).sort(sortByLocation))
-		createSection(path, pathCSS, $(".codeContainer", domainElement));
+		createSection(path, domainName+path, pathCSS, $(".codeContainer", domainElement));
 }
 
 function sortByLocation([la], [lb]) {
