@@ -13,6 +13,19 @@ header img {
 	vertical-align: bottom;
 }
 
+#actions {
+	margin-top: 0.5em;
+	display: flex;
+	justify-content: center;
+}
+#actions button {
+	font-size: 1.5rem;
+	border-radius: 5px;
+	font-weight: bold;
+	margin: 5px;
+	cursor: pointer;
+}
+
 #sowwyImLazy {
 	font-style: italic;
 	margin: 1em;
