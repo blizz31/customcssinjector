@@ -3,32 +3,40 @@ body {
 	width: 40em;
 }
 
-input {
-	margin: 2px;
-}
-
 #popupIcon {
 	width: 18px;
 	height: 18px;
 }
 
-#heading h2 {
-	display: inline;
-}
-
-#btnSubmit {
-	border-radius: 5px;
-	height: 30px;
-	width: 50px;
-	font-weight: bold;
-	margin: 5px;
-}
-
-#heading {
+header {
 	font-family: 'courier new';
 	font-size: 16px;
 }
 
+header h2 {
+	display: inline;
+}
+
 label + label {
 	margin-left: 1ch;
+}
+
+input {
+	margin: 2px;
+}
+
+main input {
+	display: block;
+}
+
+#buttons {
+	display: flex;
+	justify-content: space-between;
+}
+
+#buttons button {
+	border-radius: 5px;
+	height: 30px;
+	font-weight: bold;
+	margin: 5px;
 }
