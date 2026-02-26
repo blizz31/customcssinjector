@@ -28,3 +28,17 @@ input {
 	font-family: 'courier new';
 	font-size: 16px;
 }
+
+textarea::placeholder {
+	color: rgba(0,0,0, 0.5);
+}
+
+label + label {
+	margin-left: 1ch;
+}
+
+#whitelistText,
+#blacklistText,
+small {
+	display: block;
+}

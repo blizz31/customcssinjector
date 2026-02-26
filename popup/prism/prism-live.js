@@ -4,28 +4,29 @@
 	@author Lea Verou
 */
 (async function() {
+"use strict";
 
 if (!window.Bliss) {
 	// Load Bliss if not loaded
 	//console.log("Bliss not loaded. Loading remotely from blissfuljs.com");
 
-	let bliss = document.createElement("script");
+	const bliss = document.createElement("script");
 	bliss.src = "https://blissfuljs.com/bliss.shy.min.js";
 	document.head.appendChild(bliss);
 
 	await new Promise(resolve => bliss.onload = resolve);
 }
 
-var $ = Bliss, $$ = Bliss.$;
-var ready = Promise.resolve();
+const $ = Bliss, $$ = Bliss.$;
+let ready = Promise.resolve();
 
 if (document.currentScript) {
 	// Tiny dynamic loader. Use e.g. ?load=css,markup,javascript to load components
-	var base = document.currentScript.src;
-	var load = new URL(base).searchParams.get("load");
+	const base = document.currentScript.src;
+	const load = new URL(base).searchParams.get("load");
 
 	if (load !== null) {
-		var files = ["../prism-live.css"];
+		const files = ["../prism-live.css"];
 
 		if (load) {
 			files.push(...load.split(/,/).map(c => /\./.test(c)? c : `prism-live-${c}.js`));
@@ -35,9 +36,9 @@ if (document.currentScript) {
 	}
 }
 
-var superKey = navigator.platform.indexOf("Mac") === 0? "metaKey" : "ctrlKey";
+const superKey = navigator.platform.startsWith("Mac") ? "metaKey" : "ctrlKey";
 
-var _ = Prism.Live = class PrismLive {
+const _ = Prism.Live = class PrismLive {
 	constructor(source) {
 		this.source = source;
 		this.sourceType = source.nodeName.toLowerCase();
@@ -52,7 +53,7 @@ var _ = Prism.Live = class PrismLive {
 			this.code = $.create("code");
 
 			this.pre = $.create("pre", {
-				className: this.textarea.className + " no-whitespace-normalization line-numbers",
+				className: `${this.textarea.className} no-whitespace-normalization line-numbers`,
 				contents: this.code,
 				before: this.textarea
 			});
@@ -81,7 +82,7 @@ var _ = Prism.Live = class PrismLive {
 		}
 
 		$.bind(this.textarea, {
-			input: evt => this.update(),
+			input: this.update.bind(this),
 
 			keyup: evt => {
 				if (evt.key == "Enter") { // Enter
@@ -102,32 +103,32 @@ var _ = Prism.Live = class PrismLive {
 						this.moveCaret(this.tabstops.shift());
 					}
 					else if (this.hasSelection) {
-						var before = this.beforeCaret("\n");
-						var outdent = evt.shiftKey;
+						const before = this.beforeCaret("\n");
+						const outdent = evt.shiftKey;
 
 						this.selectionStart -= before.length;
 
-						var selection = _.adjustIndentation(this.selection, {
+						const selection = _.adjustIndentation(this.selection, {
 							relative: true,
-							indentation: outdent? -1 : 1
+							indentation: outdent ? -1 : 1
 						});
 
 						this.replace(selection);
 
 						if (outdent) {
-							var indentStart = _.regexp.gm`^${this.indent}`;
-							var isBeforeIndented = indentStart.test(before);
+							const indentStart = _.regexp.gm`^${this.indent}`;
+							const isBeforeIndented = indentStart.test(before);
 							this.selectionStart += before.length + 1 - (outdent + isBeforeIndented);
 						}
 						else { // Indent
-							var hasLineAbove = before.length == this.selectionStart;
+							const hasLineAbove = before.length == this.selectionStart;
 							this.selectionStart += before.length + 1 + !hasLineAbove;
 						}
 					}
 					else {
 						// Nothing selected, expand snippet
-						/*var selector = _.match(this.beforeCaret(), /\S*$/);
-						var snippetExpanded = this.expandSnippet(selector);
+						/*const selector = _.match(this.beforeCaret(), /\S*$/);
+						const snippetExpanded = this.expandSnippet(selector);
 
 						if (snippetExpanded) {
 							requestAnimationFrame(() => $.fire(this.textarea, "input"));
@@ -138,7 +139,7 @@ var _ = Prism.Live = class PrismLive {
 					}
 				}
 				else if(_.pairs[evt.key]) {
-					var other = _.pairs[evt.key];
+					const other = _.pairs[evt.key];
 					this.wrapSelection({
 						before: evt.key,
 						after: other,
@@ -147,7 +148,7 @@ var _ = Prism.Live = class PrismLive {
 					evt.preventDefault();
 				}
 				else {
-					for (let shortcut in _.shortcuts) {
+					for (const shortcut in _.shortcuts) {
 						if (_.checkShortcut(shortcut, evt)) {
 							_.shortcuts[shortcut].call(this, evt);
 							evt.preventDefault();
@@ -155,14 +156,14 @@ var _ = Prism.Live = class PrismLive {
 					}
 				}
 			},
-
+/*
 			click: evt => {
-				var l = this.getLine();
-				var v = this.value;
-				var ss = this.selectionStart;
+				const l = this.getLine();
+				const v = this.value;
+				const ss = this.selectionStart;
 				//console.log(ss, v[ss], l, v.slice(l.start, l.end));
 			},
-
+*/
 			"click keyup": evt => {
 				if (!evt.key || evt.key.lastIndexOf("Arrow") > -1) {
 					// Caret moved
@@ -182,10 +183,11 @@ var _ = Prism.Live = class PrismLive {
 		requestAnimationFrame(() => {
 			this.syncStyles();
 
-			var sourceCS = getComputedStyle(this.source);
+			const sourceCS = getComputedStyle(this.source);
+			const { style } = this.source;
 
-			this.pre.style.height = this.source.style.height || sourceCS.getPropertyValue("--height");
-			this.pre.style.maxHeight = this.source.style.maxHeight || sourceCS.getPropertyValue("--max-height");
+			this.pre.style.height = style.height || sourceCS.getPropertyValue("--height");
+			this.pre.style.maxHeight = style.maxHeight || sourceCS.getPropertyValue("--max-height");
 		});
 
 		this.update();
@@ -203,32 +205,33 @@ var _ = Prism.Live = class PrismLive {
 			return false;
 		}
 
-		var context = this.context;
+		const context = this.context;
+		let expansion;
 
 		if (text in context.snippets || text in _.snippets) {
 			// Static Snippets
-			var expansion = context.snippets[text] || _.snippets[text];
+			expansion = context.snippets[text] || _.snippets[text];
 		}
 		else if (context.snippets.custom) {
-			var expansion = context.snippets.custom.call(this, text);
+			expansion = context.snippets.custom.call(this, text);
 		}
 
 		if (expansion) {
 			// Insert snippet
-			var stops = [];
-			var replacement = [];
-			var str = expansion;
-			var match;
+			const stops = [];
+			const replacements = [];
+			let str = expansion;
+			let match;
 
 			while (match = _.CARET_INDICATOR.exec(str)) {
 				stops.push(match.index + 1);
-				replacement.push(str.slice(0, match.index + match[1].length));
+				replacements.push(str.slice(0, match.index + match[1].length));
 				str = str.slice(match.index + match[0].length);
 				_.CARET_INDICATOR.lastIndex = 0;
 			}
 
-			replacement.push(str);
-			replacement = replacement.join("");
+			replacements.push(str);
+			const replacement = replacements.join("");
 
 			if (stops.length > 0) {
 				// make first stop relative to end, all others relative to previous stop
@@ -278,28 +281,27 @@ var _ = Prism.Live = class PrismLive {
 	}
 
 	get currentIndent() {
-		var before = this.value.slice(0, this.selectionStart-1);
+		const before = this.value.slice(0, this.selectionStart-1);
 		return _.match(before, /^[\t ]*/mg, "", -1);
 	}
 
 	// Current language at caret position
 	get currentLanguage() {
-		var node = this.getNode();
-		node = node? node.parentNode : this.code;
-		var lang = _.match(node.closest('[class*="language-"]').className, /language-(\w+)/, 1);
+		const node = this.getNode()?.parentNode || this.code;
+		const lang = _.match(node.closest('[class*="language-"]').className, /language-(\w+)/, 1);
 		return _.aliases[lang] || lang;
 	}
 
 	// Get settings based on current language
 	get context() {
-		var lang = this.currentLanguage;
+		const lang = this.currentLanguage;
 		return _.languages[lang] || _.languages.DEFAULT;
 	}
 
 	update() {
-		var code = this.value;
+		let code = this.value;
 
-		if (/\n$/.test(this.value)) {
+		if (/\n$/.test(code)) {
 			code += "\u200b";
 		}
 
@@ -310,14 +312,14 @@ var _ = Prism.Live = class PrismLive {
 
 	syncStyles() {
 		// Copy pre metrics over to textarea
-		var cs = getComputedStyle(this.pre);
+		const cs = getComputedStyle(this.pre);
 
 		// Copy styles from <pre> to textarea
 		this.textarea.style.caretColor = cs.color;
 
-		var properties = /^(font|lineHeight)|[tT]abSize/gi;
+		const properties = /^(font|lineHeight)|[tT]abSize/gi;
 
-		for (var prop in cs) {
+		for (const prop in cs) {
 			if (cs[prop] && prop in this.textarea.style && properties.test(prop)) {
 				this.wrapper.style[prop] = cs[prop];
 				this.textarea.style[prop] = this.pre.style[prop] = "inherit";
@@ -348,7 +350,7 @@ var _ = Prism.Live = class PrismLive {
 	}
 
 	beforeCaret(until = "") {
-		var index = this.beforeCaretIndex(until);
+		let index = this.beforeCaretIndex(until);
 
 		if (index === -1 || !until) {
 			index = 0;
@@ -358,17 +360,17 @@ var _ = Prism.Live = class PrismLive {
 	}
 
 	getLine(offset = this.selectionStart) {
-		var value = this.value;
-		var lf = "\n", cr = "\r";
-		var start, end, char;
+		const value = this.value;
+		const lf = "\n", cr = "\r";
+		let start, end, char;
 
-		for (var start = this.selectionStart; char = value[start]; start--) {
+		for (start = offset; char = value[start]; start--) {
 			if (char === lf || char === cr || !start) {
 				break;
 			}
 		}
 
-		for (var end = this.selectionStart; char = value[end]; end++) {
+		for (end = this.selectionStart; char = value[end]; end++) {
 			if (char === lf || char === cr) {
 				break;
 			}
@@ -378,7 +380,7 @@ var _ = Prism.Live = class PrismLive {
 	}
 
 	afterCaret(until = "") {
-		var index = this.afterCaretIndex(until);
+		let index = this.afterCaretIndex(until);
 
 		if (index === -1 || !until) {
 			index = undefined;
@@ -410,8 +412,8 @@ var _ = Prism.Live = class PrismLive {
 		}
 		else {
 			// Specified index, first move caret there
-			var start = this.selectionStart;
-			var end = this.selectionEnd;
+			const start = this.selectionStart;
+			const end = this.selectionEnd;
 
 			this.selectionStart = this.selectionEnd = index;
 			this.replace(text);
@@ -424,7 +426,7 @@ var _ = Prism.Live = class PrismLive {
 	// Replace currently selected text
 	replace(text) {
 		if (_.supportsExecCommand) {
-			var hadSelection = this.hasSelection;
+			const hadSelection = this.hasSelection;
 			document.execCommand("insertText", false, text);
 			if (hadSelection) {
 				// By default inserText places the caret at the end, losing any selection
@@ -441,8 +443,8 @@ var _ = Prism.Live = class PrismLive {
 	// Set text between indexes and restore caret position
 	set(text, {start, end} = {}) {
 		if (_.supportsExecCommand) {
-			var ss = this.selectionStart;
-			var se = this.selectionEnd;
+			const ss = this.selectionStart;
+			const se = this.selectionEnd;
 
 			this.selectionStart = start;
 			this.selectionEnd = end;
@@ -466,9 +468,9 @@ var _ = Prism.Live = class PrismLive {
 	 * @param end {Number} Character offset
 	 */
 	wrap({before, after, start = this.selectionStart, end = this.selectionEnd} = {}) {
-		var ss = this.selectionStart;
-		var se = this.selectionEnd;
-		var between = this.value.slice(start, end);
+		let ss = this.selectionStart;
+		let se = this.selectionEnd;
+		const between = this.value.slice(start, end);
 
 		this.set(before + between + after, {start, end});
 
@@ -493,7 +495,7 @@ var _ = Prism.Live = class PrismLive {
 	}
 
 	wrapSelection(o = {}) {
-		var hadSelection = this.hasSelection;
+		const hadSelection = this.hasSelection;
 
 		this.replace(o.before + this.selection + o.after);
 
@@ -510,23 +512,22 @@ var _ = Prism.Live = class PrismLive {
 	}
 
 	toggleComment() {
-		var comments = this.context.comments;
+		let comments = this.context.comments;
 
 		// Are we inside a comment?
-		var node = this.getNode();
-		var commentNode = node.parentNode.closest(".token.comment");
+		const commentNode = this.getNode().parentNode.closest(".token.comment");
 
 		if (commentNode) {
 			// Remove comment
-			var start = this.getOffset(commentNode);
-			var commentText = commentNode.textContent;
+			const start = this.getOffset(commentNode);
+			const commentText = commentNode.textContent;
 
 			if (comments.singleline && commentText.indexOf(comments.singleLine) === 0) {
 				// TODO
 			}
 			else {
 				comments = comments.multiline || comments;
-				var end = start + commentText.length - comments[1].length;
+				const end = start + commentText.length - comments[1].length;
 				this.set(this.value.slice(start + comments[0].length, end), {start, end: end + comments[1].length});
 			}
 		}
@@ -543,8 +544,10 @@ var _ = Prism.Live = class PrismLive {
 			else {
 				// No selection, wrap line
 				// FIXME *inside indent*
-				comments = comments.singleline? [comments.singleline, "\n"] : comments.multiline || comments;
-				end = this.afterCaretIndex("\n");
+				comments = comments.singleline
+					? [comments.singleline, "\n"]
+					: comments.multiline || comments;
+				const end = this.afterCaretIndex("\n");
 				this.wrap({
 					before: comments[0],
 					after: comments[1],
@@ -556,24 +559,24 @@ var _ = Prism.Live = class PrismLive {
 	}
 
 	duplicateContent() {
-		var before = this.beforeCaret("\n");
-		var after = this.afterCaret("\n");
-		var text = before + this.selection + after;
+		const before = this.beforeCaret("\n");
+		const after = this.afterCaret("\n");
+		const text = before + this.selection + after;
 
 		this.insert(text, {index: this.selectionStart - before.length});
 	}
 
 	delete(characters, {forward, pos} = {}) {
-		var i = characters = characters > 0? characters : (characters + "").length;
+		characters = characters > 0 ? characters : (characters + "").length;
 
 		if (pos) {
-			var selectionStart = this.selectionStart;
+			const selectionStart = this.selectionStart;
 			this.selectionStart = pos;
 			this.selectionEnd = pos + this.selectionEnd - selectionStart;
 		}
 
-		while (i--) {
-			document.execCommand(forward? "forwardDelete" : "delete");
+		for (let i = characters; i !== 0; i--) {
+			document.execCommand(forward ? "forwardDelete" : "delete");
 		}
 
 		if (pos) {
@@ -587,8 +590,8 @@ var _ = Prism.Live = class PrismLive {
 	 * Get the text node at a given chracter offset
 	 */
 	getNode(offset = this.selectionStart, container = this.code) {
-		var node, sum = 0;
-		var walk = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+		let node, sum = 0;
+		const walk = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
 
 		while (node = walk.nextNode()) {
 			sum += node.data.length;
@@ -606,7 +609,7 @@ var _ = Prism.Live = class PrismLive {
 	 * Get the character offset of a given node in the highlighted source
 	 */
 	getOffset(node) {
-		var range = document.createRange();
+		const range = document.createRange();
 		range.selectNodeContents(this.code);
 		range.setEnd(node, 0);
 		return range.toString().length;
@@ -619,13 +622,13 @@ var _ = Prism.Live = class PrismLive {
 			def = undefined;
 		}
 
-		var match = str.match(regex);
+		const match = str.match(regex);
 
 		if (index < 0) {
 			index = match.length + index;
 		}
 
-		return match? match[index] : def;
+		return match ? match[index] : def;
 	}
 
 	static checkShortcut(shortcut, evt) {
@@ -655,7 +658,7 @@ var _ = Prism.Live = class PrismLive {
 	static adjustIndentation(text, {indentation, relative = true, indent = _.DEFAULT_INDENT}) {
 		if (!relative) {
 			// First strip min indentation
-			var minIndent = text.match(_.regexp.gm`^(${indent})+`).sort()[0];
+			const minIndent = text.match(_.regexp.gm`^(${indent})+`).sort()[0];
 
 			if (minIndent) {
 				text.replace(_.regexp.gm`^${minIndent}`, "");
@@ -701,11 +704,13 @@ Object.assign(_, {
 	},
 	// Map of Prism language ids and their canonical name
 	aliases: (() => {
-		var ret = {};
-		var canonical = new WeakMap(Object.entries(Prism.languages).map(x => x.reverse()).reverse());
+		const ret = {};
+		const canonical = new WeakMap(
+			Object.entries(Prism.languages).map(x => x.reverse()).reverse()
+		);
 
-		for (var id in Prism.languages) {
-			var grammar = Prism.languages[id];
+		for (const id in Prism.languages) {
+			const grammar = Prism.languages[id];
 
 			if (typeof grammar !== "function") {
 				ret[id] = canonical.get(grammar);
@@ -716,12 +721,12 @@ Object.assign(_, {
 	})(),
 
 	regexp: (() => {
-		var escape = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
-		var _regexp = (flags, strings, ...values) => {
-			var pattern = strings[0] + values.map((v, i) => escape(v) + strings[i+1]).join("");
+		const escape = s => s.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+		const _regexp = (flags, strings, ...values) => {
+			const pattern = strings[0] + values.map((v, i) => escape(v) + strings[i+1]).join("");
 			return RegExp(pattern, flags);
 		};
-		var cache = {};
+		const cache = {};
 
 		return new Proxy(_regexp.bind(_, ""), {
 			get: (t, property) => {
@@ -733,7 +738,7 @@ Object.assign(_, {
 });
 
 $.ready().then(() => {
-	var t = $.create("textarea", {inside: document.body});
+	const t = $.create("textarea", {inside: document.body});
 	t.focus();
 	document.execCommand("insertText", false, "a");
 	_.supportsExecCommand = !!t.value;
@@ -746,4 +751,4 @@ $.ready().then(() => {
 	});
 });
 
-})();
+})(); // end IIFE
